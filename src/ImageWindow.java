@@ -17,13 +17,18 @@ import java.io.File;
  */
 public class ImageWindow
 {
-	private final static int WIDTH = 500;
-	private final static int HEIGHT = 500;
+	private final static int WIDTH = 940;
+	private final static int HEIGHT = 410;
 
 	private final static int IMAGE_WIDTH = 300;
 	private final static int IMAGE_HEIGHT = 300;
+	private final static int RADIO_BUTTONS_WIDTH = 300;
+	private final static int DIVIDER_HEIGHT = 350;
 
 	private JFrame window;
+
+	private JPanel loadPanel;
+	private JPanel mixPanel;
 
 	private JButton load;
 	private JButton save;
@@ -44,12 +49,23 @@ public class ImageWindow
 		initItems();
 		addItems();
 		initActions();
+
+		mixPanel.setVisible(false);
+
+		window.setResizable(false);
+		window.setVisible(true);
+		window.setSize(new Dimension(WIDTH, HEIGHT));
+		window.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		window.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+		window.setMaximumSize(new Dimension(WIDTH, HEIGHT));
 	}
 
 	private void initItems()
 	{
 		window = new JFrame("RGB Mixer");
-		window.setSize(WIDTH, HEIGHT);
+
+		loadPanel = new JPanel(new MigLayout("wrap 1"));
+		mixPanel = new JPanel(new MigLayout("wrap 4"));
 
 		load = new JButton("Choose Any Image");
 		loadedImage = new JLabel();
@@ -99,38 +115,38 @@ public class ImageWindow
 
 	private void addItems()
 	{
-		window.setLayout(new MigLayout("wrap 5"));
+		window.setLayout(new MigLayout("wrap 2"));
 
-		window.add(load);
-		window.add(new JSeparator(SwingConstants.VERTICAL), "span 1 16, height 350");
-		window.add(new JLabel("Red"));
-		window.add(new JSeparator(SwingConstants.VERTICAL), "span 1 16, height 350");
-		window.add(mixedImage, "span 1 15");
+		loadPanel.add(load);
+		loadPanel.add(loadedImage);
 
-		window.add(loadedImage, "span 1 15");
+		mixPanel.add(new JSeparator(SwingConstants.VERTICAL), "span 1 16, height " + DIVIDER_HEIGHT);
+		mixPanel.add(new JLabel("Red"));
+		mixPanel.add(new JSeparator(SwingConstants.VERTICAL), "span 1 16, height " + DIVIDER_HEIGHT);
+		mixPanel.add(mixedImage, "span 1 15");
 
-		window.add(buttons[0]);
-		window.add(buttons[3]);
-		window.add(buttons[6]);
-		window.add(new JSeparator(SwingConstants.HORIZONTAL), "width 75");
+		mixPanel.add(buttons[0]);
+		mixPanel.add(buttons[3]);
+		mixPanel.add(buttons[6]);
+		mixPanel.add(new JSeparator(SwingConstants.HORIZONTAL), "width " + RADIO_BUTTONS_WIDTH);
 
-		window.add(new JLabel("Green"));
-		window.add(buttons[1]);
-		window.add(buttons[4]);
-		window.add(buttons[7]);
-		window.add(new JSeparator(SwingConstants.HORIZONTAL), "width 75");
+		mixPanel.add(new JLabel("Green"));
+		mixPanel.add(buttons[1]);
+		mixPanel.add(buttons[4]);
+		mixPanel.add(buttons[7]);
+		mixPanel.add(new JSeparator(SwingConstants.HORIZONTAL), "width " + RADIO_BUTTONS_WIDTH);
 
-		window.add(new JLabel("Blue"));
-		window.add(buttons[2]);
-		window.add(buttons[5]);
-		window.add(buttons[8]);
-		window.add(new JSeparator(SwingConstants.HORIZONTAL), "width 75");
+		mixPanel.add(new JLabel("Blue"));
+		mixPanel.add(buttons[2]);
+		mixPanel.add(buttons[5]);
+		mixPanel.add(buttons[8]);
+		mixPanel.add(new JSeparator(SwingConstants.HORIZONTAL), "width " + RADIO_BUTTONS_WIDTH);
 
-		window.add(mixButton);
-		window.add(save);
+		mixPanel.add(mixButton);
+		mixPanel.add(save);
 
-		window.setVisible(true);
-		window.pack();
+		window.add(loadPanel);
+		window.add(mixPanel);
 	}
 
 	private void initActions()
@@ -179,6 +195,8 @@ public class ImageWindow
 					catch (Exception exp)
 					{
 					}
+
+					mixPanel.setVisible(true);
 				}
 			}
 		});
