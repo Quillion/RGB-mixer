@@ -1,6 +1,14 @@
 import net.miginfocom.swing.MigLayout;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 /**
  * User: Edgar
@@ -12,13 +20,14 @@ public class ImageWindow
 	private final static int WIDTH = 500;
 	private final static int HEIGHT = 500;
 
+	private final static int IMAGE_WIDTH = 300;
+	private final static int IMAGE_HEIGHT = 300;
+
 	private JFrame window;
 
-	private JButton fromButton;
-	private JFileChooser fromChooser;
-	private JButton toButton;
-	private JFileChooser toChooser;
-	private JLabel fromImage;
+	private JButton load;
+	private JButton save;
+	private JLabel loadedImage;
 	private JLabel mixedImage;
 	private JButton mixButton;
 
@@ -27,12 +36,14 @@ public class ImageWindow
 	private ButtonGroup green;
 	private ButtonGroup blue;
 
+	private BufferedImage original;
+	private BufferedImage mixed;
+
 	public ImageWindow()
 	{
 		initItems();
 		addItems();
-
-		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		initActions();
 	}
 
 	private void initItems()
@@ -40,13 +51,19 @@ public class ImageWindow
 		window = new JFrame("RGB Mixer");
 		window.setSize(WIDTH, HEIGHT);
 
-		fromButton = new JButton("Choose Any Image");
-		fromChooser = new JFileChooser();
-		fromImage = new JLabel();
+		load = new JButton("Choose Any Image");
+		loadedImage = new JLabel();
+		loadedImage.setSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT));
+		loadedImage.setPreferredSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT));
+		loadedImage.setMinimumSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT));
+		loadedImage.setMaximumSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT));
 
-		toButton = new JButton("Saved Mixed Image");
-		toChooser = new JFileChooser();
+		save = new JButton("Saved Mixed Image");
 		mixedImage = new JLabel();
+		mixedImage.setSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT));
+		mixedImage.setPreferredSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT));
+		mixedImage.setMinimumSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT));
+		mixedImage.setMaximumSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT));
 
 		buttons = new JRadioButton[9];
 		buttons[0] = new JRadioButton("Red");
@@ -84,13 +101,13 @@ public class ImageWindow
 	{
 		window.setLayout(new MigLayout("wrap 5"));
 
-		window.add(fromButton);
+		window.add(load);
 		window.add(new JSeparator(SwingConstants.VERTICAL), "span 1 16, height 350");
 		window.add(new JLabel("Red"));
 		window.add(new JSeparator(SwingConstants.VERTICAL), "span 1 16, height 350");
 		window.add(mixedImage, "span 1 15");
 
-		window.add(fromImage, "span 1 15");
+		window.add(loadedImage, "span 1 15");
 
 		window.add(buttons[0]);
 		window.add(buttons[3]);
@@ -110,9 +127,60 @@ public class ImageWindow
 		window.add(new JSeparator(SwingConstants.HORIZONTAL), "width 75");
 
 		window.add(mixButton);
-		window.add(toButton);
+		window.add(save);
 
 		window.setVisible(true);
 		window.pack();
+	}
+
+	private void initActions()
+	{
+		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		load.addActionListener(new ActionListener()
+		{
+			private JFileChooser imageChooser = null;//new JFileChooser();
+			private File file = null;
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if (imageChooser == null)
+				{
+					imageChooser = new JFileChooser();
+					imageChooser.setMultiSelectionEnabled(false);
+					imageChooser.setAcceptAllFileFilterUsed(false);
+					// Get array of available formats
+					String[] suffices = ImageIO.getReaderFileSuffixes();
+
+					// Add a file filter for each one
+					for (String suffice : suffices)
+					{
+						FileFilter filter = new FileNameExtensionFilter(suffice + " files", suffice);
+						imageChooser.addChoosableFileFilter(filter);
+					}
+				}
+				if (file != null)
+				{
+					imageChooser.setSelectedFile(file);
+				}
+				if (imageChooser.showOpenDialog(window) == JFileChooser.APPROVE_OPTION)
+				{
+					file = imageChooser.getSelectedFile();
+					load.setText(file.getName());
+					try
+					{
+						original = ImageIO.read(file);
+						mixed = ImageIO.read(file);
+
+						loadedImage.setIcon(new ImageIcon(original));
+						mixedImage.setIcon(new ImageIcon(mixed));
+					}
+					catch (Exception exp)
+					{
+					}
+				}
+			}
+		});
 	}
 }
