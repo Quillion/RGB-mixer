@@ -41,6 +41,8 @@ public class ImageWindow
 	private BufferedImage original;
 	private BufferedImage mixed;
 
+	private File file;
+
 	public ImageWindow()
 	{
 		initItems();
@@ -152,8 +154,7 @@ public class ImageWindow
 
 		load.addActionListener(new ActionListener()
 		{
-			private JFileChooser imageChooser = null;//new JFileChooser();
-			private File file = null;
+			private JFileChooser imageChooser = null;
 
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -229,6 +230,40 @@ public class ImageWindow
 
 				mixed = ImageLibrary.mix(ImageLibrary.deepCopy(original), r, g, b);
 				mixedImage.setIcon(new ImageIcon(ImageLibrary.resize(mixed, IMAGE_WIDTH, IMAGE_HEIGHT)));
+			}
+		});
+
+		save.addActionListener(new ActionListener()
+		{
+			private JFileChooser saveFile;
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if (saveFile == null)
+				{
+					saveFile = new JFileChooser();
+					saveFile.setMultiSelectionEnabled(false);
+					saveFile.setAcceptAllFileFilterUsed(false);
+					saveFile.setSelectedFile(file);
+				}
+				if (saveFile.showSaveDialog(window) == JFileChooser.APPROVE_OPTION)
+				{
+					File saveLocation = saveFile.getSelectedFile();
+
+					int i = saveLocation.getName().lastIndexOf('.');
+					if (i > 0)
+					{
+						String extension = saveLocation.getName().substring(i + 1);
+						try
+						{
+							ImageIO.write(mixed, extension, saveLocation);
+						}
+						catch (Exception ex)
+						{
+						}
+					}
+				}
 			}
 		});
 	}
