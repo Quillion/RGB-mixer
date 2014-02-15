@@ -37,9 +37,6 @@ public class ImageWindow
 	private JButton mixButton;
 
 	private JRadioButton[] buttons;
-	private ButtonGroup red;
-	private ButtonGroup green;
-	private ButtonGroup blue;
 
 	private BufferedImage original;
 	private BufferedImage mixed;
@@ -97,17 +94,17 @@ public class ImageWindow
 
 		mixButton = new JButton("Mix...");
 
-		red = new ButtonGroup();
+		ButtonGroup red = new ButtonGroup();
 		red.add(buttons[0]);
 		red.add(buttons[3]);
 		red.add(buttons[6]);
 
-		green = new ButtonGroup();
+		ButtonGroup green = new ButtonGroup();
 		green.add(buttons[1]);
 		green.add(buttons[4]);
 		green.add(buttons[7]);
 
-		blue = new ButtonGroup();
+		ButtonGroup blue = new ButtonGroup();
 		blue.add(buttons[2]);
 		blue.add(buttons[5]);
 		blue.add(buttons[8]);
@@ -189,8 +186,8 @@ public class ImageWindow
 						original = ImageIO.read(file);
 						mixed = ImageIO.read(file);
 
-						loadedImage.setIcon(new ImageIcon(original));
-						mixedImage.setIcon(new ImageIcon(mixed));
+						loadedImage.setIcon(new ImageIcon(ImageLibrary.resize(original, IMAGE_WIDTH, IMAGE_HEIGHT)));
+						mixedImage.setIcon(new ImageIcon(ImageLibrary.resize(mixed, IMAGE_WIDTH, IMAGE_HEIGHT)));
 					}
 					catch (Exception exp)
 					{
@@ -230,8 +227,8 @@ public class ImageWindow
 				else if (buttons[8].isSelected())
 					b = ImageLibrary.BLUE;
 
-				mixed = ImageLibrary.mix(original, r, g, b);
-				mixedImage.setIcon(new ImageIcon(mixed));
+				mixed = ImageLibrary.mix(ImageLibrary.deepCopy(original), r, g, b);
+				mixedImage.setIcon(new ImageIcon(ImageLibrary.resize(mixed, IMAGE_WIDTH, IMAGE_HEIGHT)));
 			}
 		});
 	}
