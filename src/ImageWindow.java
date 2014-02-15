@@ -200,5 +200,39 @@ public class ImageWindow
 				}
 			}
 		});
+
+		mixButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				int r = 0;
+				if (buttons[0].isSelected())
+					r = ImageLibrary.RED;
+				else if (buttons[3].isSelected())
+					r = ImageLibrary.GREEN;
+				else if (buttons[6].isSelected())
+					r = ImageLibrary.BLUE;
+
+				int g = ImageLibrary.GREEN;
+				if (buttons[1].isSelected())
+					g = ImageLibrary.RED;
+				else if (buttons[4].isSelected())
+					g = ImageLibrary.GREEN;
+				else if (buttons[7].isSelected())
+					g = ImageLibrary.BLUE;
+
+				int b = ImageLibrary.BLUE;
+				if (buttons[2].isSelected())
+					b = ImageLibrary.RED;
+				else if (buttons[5].isSelected())
+					b = ImageLibrary.GREEN;
+				else if (buttons[8].isSelected())
+					b = ImageLibrary.BLUE;
+
+				mixed = ImageLibrary.mix(original, r, g, b);
+				mixedImage.setIcon(new ImageIcon(mixed));
+			}
+		});
 	}
 }
