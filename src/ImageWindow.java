@@ -201,6 +201,7 @@ public class ImageWindow
 					{
 					}
 
+					System.out.println(file.getAbsolutePath());
 					mixPanel.setVisible(true);
 				}
 			}
@@ -252,7 +253,30 @@ public class ImageWindow
 					saveFile = new JFileChooser();
 					saveFile.setMultiSelectionEnabled(false);
 					saveFile.setAcceptAllFileFilterUsed(false);
-					saveFile.setSelectedFile(file);
+					String saveName = file.getAbsolutePath();
+					int end = saveName.lastIndexOf('.');
+					String r = "r";
+					if (buttons[3].isSelected())
+						r = "g";
+					else if (buttons[6].isSelected())
+						r = "b";
+
+					String g = "g";
+					if (buttons[1].isSelected())
+						g = "r";
+					else if (buttons[7].isSelected())
+						g = "b";
+
+					String b = "b";
+					if (buttons[2].isSelected())
+						b = "r";
+					else if (buttons[5].isSelected())
+						b = "g";
+
+					saveName = saveName.substring(0, end) +
+							r + g + b + (inverse.isSelected() ? "i" : "") +
+							"." + saveName.substring(end + 1);
+					saveFile.setSelectedFile(new File(saveName));
 				}
 				if (saveFile.showSaveDialog(window) == JFileChooser.APPROVE_OPTION)
 				{
