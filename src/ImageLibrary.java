@@ -14,7 +14,7 @@ public class ImageLibrary
 	public final static int GREEN = 1;
 	public final static int BLUE = 2;
 
-	public static BufferedImage mix(BufferedImage image, int red, int green, int blue)
+	public static BufferedImage mix(BufferedImage image, int red, int green, int blue, boolean inverse)
 	{
 		int width = image.getWidth();
 		int height = image.getHeight();
@@ -29,6 +29,13 @@ public class ImageLibrary
 				int r = (rgb[index] >> 16) & 0x000000ff;
 				int g = (rgb[index] >> 8) & 0x000000ff;
 				int b = rgb[index] & 0x000000ff;
+
+				if (inverse)
+				{
+					r = 255 - r;
+					g = 255 - g;
+					b = 255 - b;
+				}
 
 				int color = 0x00000000;
 				color = color | (a << 24);

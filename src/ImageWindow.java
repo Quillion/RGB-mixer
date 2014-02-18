@@ -18,12 +18,12 @@ import java.io.File;
 public class ImageWindow
 {
 	private final static int WIDTH = 940;
-	private final static int HEIGHT = 410;
+	private final static int HEIGHT = 435;
 
 	private final static int IMAGE_WIDTH = 300;
 	private final static int IMAGE_HEIGHT = 300;
 	private final static int RADIO_BUTTONS_WIDTH = 300;
-	private final static int DIVIDER_HEIGHT = 350;
+	private final static int DIVIDER_HEIGHT = 370;
 
 	private JFrame window;
 
@@ -37,6 +37,8 @@ public class ImageWindow
 	private JButton mixButton;
 
 	private JRadioButton[] buttons;
+
+	private JCheckBox inverse;
 
 	private BufferedImage original;
 	private BufferedImage mixed;
@@ -110,6 +112,8 @@ public class ImageWindow
 		blue.add(buttons[2]);
 		blue.add(buttons[5]);
 		blue.add(buttons[8]);
+
+		inverse = new JCheckBox("inverse");
 	}
 
 	private void addItems()
@@ -119,10 +123,10 @@ public class ImageWindow
 		loadPanel.add(load);
 		loadPanel.add(loadedImage);
 
-		mixPanel.add(new JSeparator(SwingConstants.VERTICAL), "span 1 16, height " + DIVIDER_HEIGHT);
+		mixPanel.add(new JSeparator(SwingConstants.VERTICAL), "span 1 18, height " + DIVIDER_HEIGHT);
 		mixPanel.add(new JLabel("Red"));
-		mixPanel.add(new JSeparator(SwingConstants.VERTICAL), "span 1 16, height " + DIVIDER_HEIGHT);
-		mixPanel.add(mixedImage, "span 1 15");
+		mixPanel.add(new JSeparator(SwingConstants.VERTICAL), "span 1 18, height " + DIVIDER_HEIGHT);
+		mixPanel.add(mixedImage, "span 1 17");
 
 		mixPanel.add(buttons[0]);
 		mixPanel.add(buttons[3]);
@@ -139,6 +143,9 @@ public class ImageWindow
 		mixPanel.add(buttons[2]);
 		mixPanel.add(buttons[5]);
 		mixPanel.add(buttons[8]);
+		mixPanel.add(new JSeparator(SwingConstants.HORIZONTAL), "width " + RADIO_BUTTONS_WIDTH);
+
+		mixPanel.add(inverse);
 		mixPanel.add(new JSeparator(SwingConstants.HORIZONTAL), "width " + RADIO_BUTTONS_WIDTH);
 
 		mixPanel.add(mixButton);
@@ -228,7 +235,7 @@ public class ImageWindow
 				else if (buttons[8].isSelected())
 					b = ImageLibrary.BLUE;
 
-				mixed = ImageLibrary.mix(ImageLibrary.deepCopy(original), r, g, b);
+				mixed = ImageLibrary.mix(ImageLibrary.deepCopy(original), r, g, b, inverse.isSelected());
 				mixedImage.setIcon(new ImageIcon(ImageLibrary.resize(mixed, IMAGE_WIDTH, IMAGE_HEIGHT)));
 			}
 		});
