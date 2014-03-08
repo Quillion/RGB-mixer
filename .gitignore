@@ -1,4 +1,5 @@
 *.class
+*.MF
 
 # Package Files #
 *.war
@@ -7,3 +8,4 @@
 # Intellij
 .idea/
 *.iml
+out/production/
