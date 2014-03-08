@@ -1,3 +1,9 @@
+/**
+ * @author Edgar Ghahramanyan <edgarquill@gmail.com>
+ * @version Version 1
+ * @since 1.6
+ */
+
 import net.miginfocom.swing.MigLayout;
 
 import javax.imageio.ImageIO;
@@ -11,20 +17,22 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
- * User: Edgar
- * Date: 2/13/14
- * Time: 7:49 PM
+ * Contains gui interface for loading and saving images and
+ * calling functions to manipulate pixels.
  */
 public class ImageWindow
 {
+	// MAIN WINDOW HEIGHT AND WIDTH
 	private final static int WIDTH = 940;
 	private final static int HEIGHT = 435;
 
+	// ETC SIZES FOR ELEMENTS
 	private final static int IMAGE_WIDTH = 300;
 	private final static int IMAGE_HEIGHT = 300;
 	private final static int RADIO_BUTTONS_WIDTH = 300;
 	private final static int DIVIDER_HEIGHT = 370;
 
+	// WINDOW ELEMENTS
 	private JFrame window;
 
 	private JPanel loadPanel;
@@ -199,9 +207,9 @@ public class ImageWindow
 					}
 					catch (Exception exp)
 					{
+						new JOptionPane(exp.toString(), JOptionPane.ERROR_MESSAGE).createDialog(window, "Error");
 					}
 
-					System.out.println(file.getAbsolutePath());
 					mixPanel.setVisible(true);
 				}
 			}
@@ -212,29 +220,26 @@ public class ImageWindow
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				int r = 0;
-				if (buttons[0].isSelected())
-					r = ImageLibrary.RED;
-				else if (buttons[3].isSelected())
+				// FIND OUT WHICH VALUE FOR RED IS SELECTED
+				int r = ImageLibrary.RED;
+				if (buttons[3].isSelected())
 					r = ImageLibrary.GREEN;
 				else if (buttons[6].isSelected())
 					r = ImageLibrary.BLUE;
 
+				// FIND OUT WHICH VALUE FOR GREEN IS SELECTED
 				int g = ImageLibrary.GREEN;
 				if (buttons[1].isSelected())
 					g = ImageLibrary.RED;
-				else if (buttons[4].isSelected())
-					g = ImageLibrary.GREEN;
 				else if (buttons[7].isSelected())
 					g = ImageLibrary.BLUE;
 
+				// FIND OUT WHICH VALUE FOR BLUE IS SELECTED
 				int b = ImageLibrary.BLUE;
 				if (buttons[2].isSelected())
 					b = ImageLibrary.RED;
 				else if (buttons[5].isSelected())
 					b = ImageLibrary.GREEN;
-				else if (buttons[8].isSelected())
-					b = ImageLibrary.BLUE;
 
 				mixed = ImageLibrary.mix(ImageLibrary.deepCopy(original), r, g, b, inverse.isSelected());
 				mixedImage.setIcon(new ImageIcon(ImageLibrary.resize(mixed, IMAGE_WIDTH, IMAGE_HEIGHT)));
@@ -250,11 +255,16 @@ public class ImageWindow
 			{
 				if (saveFile == null)
 				{
+					// CREATE FILE CHOOSER
 					saveFile = new JFileChooser();
 					saveFile.setMultiSelectionEnabled(false);
 					saveFile.setAcceptAllFileFilterUsed(false);
+					// GET PATH OF ORIGINAL IMAGE
 					String saveName = file.getAbsolutePath();
+					// REMOVE IMAGE TYPE
 					int end = saveName.lastIndexOf('.');
+
+					// ADD SUFFIX BASED ON COLOR IMAGES CHOSEN
 					String r = "r";
 					if (buttons[3].isSelected())
 						r = "g";
@@ -273,11 +283,14 @@ public class ImageWindow
 					else if (buttons[5].isSelected())
 						b = "g";
 
+					// CREATE THE NEW FILENAME
 					saveName = saveName.substring(0, end) +
 							r + g + b + (inverse.isSelected() ? "i" : "") +
 							"." + saveName.substring(end + 1);
+					// PROMPT USER IF HE WANTS TO SAVE
 					saveFile.setSelectedFile(new File(saveName));
 				}
+				// USER CHOSE TO SAVE
 				if (saveFile.showSaveDialog(window) == JFileChooser.APPROVE_OPTION)
 				{
 					File saveLocation = saveFile.getSelectedFile();
@@ -290,8 +303,9 @@ public class ImageWindow
 						{
 							ImageIO.write(mixed, extension, saveLocation);
 						}
-						catch (Exception ex)
+						catch (Exception exp)
 						{
+							new JOptionPane(exp.toString(), JOptionPane.ERROR_MESSAGE).createDialog(window, "Error");
 						}
 					}
 				}
